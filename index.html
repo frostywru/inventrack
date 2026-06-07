@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InvenTrack — Inventory Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ PIN SCREEN ═══ -->
+  <div id="pin-screen" class="pin-screen hidden">
+    <div class="pin-bg-grid"></div>
+    <div class="pin-card">
+      <div class="pin-logo">
+        <span class="pin-logo-icon">▣</span>
+        <span class="pin-logo-text">InvenTrack</span>
+      </div>
+      <p class="pin-subtitle">Enter your PIN to continue</p>
+      <div class="pin-display" id="pin-display">
+        <span class="pin-dot" id="dot-0"></span>
+        <span class="pin-dot" id="dot-1"></span>
+        <span class="pin-dot" id="dot-2"></span>
+        <span class="pin-dot" id="dot-3"></span>
+        <span class="pin-dot" id="dot-4"></span>
+        <span class="pin-dot" id="dot-5"></span>
+      </div>
+      <p class="pin-error hidden" id="pin-error">Incorrect PIN. Please try again.</p>
+      <div class="pin-keypad">
+        <button class="pin-key" data-val="1">1</button>
+        <button class="pin-key" data-val="2">2</button>
+        <button class="pin-key" data-val="3">3</button>
+        <button class="pin-key" data-val="4">4</button>
+        <button class="pin-key" data-val="5">5</button>
+        <button class="pin-key" data-val="6">6</button>
+        <button class="pin-key" data-val="7">7</button>
+        <button class="pin-key" data-val="8">8</button>
+        <button class="pin-key" data-val="9">9</button>
+        <button class="pin-key pin-key--clear" id="pin-clear">⌫</button>
+        <button class="pin-key" data-val="0">0</button>
+        <button class="pin-key pin-key--enter" id="pin-enter">↵</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ APP SHELL ════ -->
+  <div id="app" class="app hidden">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo-icon">▣</span>
+        <span class="sidebar-logo-text">InvenTrack</span>
+        <button class="sidebar-close" id="sidebar-close">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">◈</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="inventory">
+          <span class="nav-icon">◫</span>
+          <span>Inventory</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn" id="logout-btn">
+          <span>⏻</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay hidden" id="sidebar-overlay"></div>
+
+    <!-- Main content -->
+    <div class="main-wrap">
+      <!-- Top bar -->
+      <header class="topbar">
+        <button class="hamburger" id="hamburger">☰</button>
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+        <div class="topbar-right">
+          <span class="topbar-badge" id="alert-badge">0</span>
+        </div>
+      </header>
+
+      <!-- Pages -->
+      <main class="content">
+
+        <!-- ───────────── DASHBOARD PAGE ───────────── -->
+        <section id="page-dashboard" class="page active">
+
+          <!-- Alert bar -->
+          <div class="alert-bar" id="alert-bar"></div>
+
+          <!-- KPI cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card kpi-card--blue">
+              <div class="kpi-label">Total Products</div>
+              <div class="kpi-value" id="kpi-total-products">—</div>
+              <div class="kpi-icon">◫</div>
+            </div>
+            <div class="kpi-card kpi-card--green">
+              <div class="kpi-label">Inventory Value</div>
+              <div class="kpi-value" id="kpi-total-value">—</div>
+              <div class="kpi-icon">◈</div>
+            </div>
+            <div class="kpi-card kpi-card--purple">
+              <div class="kpi-label">Total Stock Qty</div>
+              <div class="kpi-value" id="kpi-total-stock">—</div>
+              <div class="kpi-icon">▦</div>
+            </div>
+            <div class="kpi-card kpi-card--orange">
+              <div class="kpi-label">Low Stock</div>
+              <div class="kpi-value" id="kpi-low-stock">—</div>
+              <div class="kpi-icon">⚡</div>
+            </div>
+            <div class="kpi-card kpi-card--red">
+              <div class="kpi-label">Out of Stock</div>
+              <div class="kpi-value" id="kpi-out-of-stock">—</div>
+              <div class="kpi-icon">⊗</div>
+            </div>
+            <div class="kpi-card kpi-card--teal">
+              <div class="kpi-label">Recently Updated</div>
+              <div class="kpi-value" id="kpi-recently-updated">—</div>
+              <div class="kpi-icon">↻</div>
+            </div>
+          </div>
+
+          <!-- Threshold setting -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <h2 class="section-title">⚙ Low Stock Threshold</h2>
+            </div>
+            <div class="threshold-row">
+              <p class="threshold-desc">Products with stock ≤ threshold are marked <strong>Low Stock</strong>. Products with stock = 0 are <strong>Out of Stock</strong>.</p>
+              <div class="threshold-control">
+                <input type="number" id="threshold-input" class="threshold-input" min="1" max="9999" value="5" />
+                <button class="btn btn--primary" id="save-threshold-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Low stock table -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <h2 class="section-title">⚡ Low Stock Products</h2>
+            </div>
+            <div class="table-wrap" id="low-stock-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Current Stock</th>
+                    <th>Min Threshold</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="low-stock-tbody"></tbody>
+              </table>
+              <div class="empty-state hidden" id="low-stock-empty">
+                <span class="empty-icon">✓</span>
+                <p>No low stock products</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Out of stock table -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <h2 class="section-title">⊗ Out of Stock Products</h2>
+            </div>
+            <div class="table-wrap" id="out-stock-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Last Updated</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="out-stock-tbody"></tbody>
+              </table>
+              <div class="empty-state hidden" id="out-stock-empty">
+                <span class="empty-icon">✓</span>
+                <p>No out-of-stock products</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <h2 class="section-title">↻ Recent Activity</h2>
+            </div>
+            <div id="activity-feed" class="activity-feed">
+              <div class="empty-state" id="activity-empty">
+                <span class="empty-icon">◌</span>
+                <p>No recent activity</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ───────────── INVENTORY PAGE ───────────── -->
+        <section id="page-inventory" class="page hidden">
+
+          <!-- Toolbar -->
+          <div class="inv-toolbar">
+            <div class="search-wrap">
+              <span class="search-icon">⌕</span>
+              <input type="text" id="search-input" class="search-input" placeholder="Search by name or category…" />
+            </div>
+            <div class="filter-wrap">
+              <select id="filter-status" class="filter-select">
+                <option value="all">All Status</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+              <select id="filter-category" class="filter-select">
+                <option value="all">All Categories</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" id="add-product-btn">+ Add Product</button>
+          </div>
+
+          <!-- Table / cards -->
+          <div class="section-card">
+            <div class="table-wrap" id="inv-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Cost</th>
+                    <th>Sell Price</th>
+                    <th>Stock</th>
+                    <th>Inv. Value</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inv-tbody"></tbody>
+              </table>
+              <div class="empty-state hidden" id="inv-empty">
+                <span class="empty-icon">◫</span>
+                <p>No products found. Add your first product!</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════ PRODUCT MODAL ════════ -->
+  <div class="modal-backdrop hidden" id="product-modal-backdrop">
+    <div class="modal" id="product-modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Add Product</h2>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="product-id" />
+        <div class="form-grid">
+          <div class="form-group form-group--full">
+            <label class="form-label">Product Name <span class="required">*</span></label>
+            <input type="text" id="f-name" class="form-input" placeholder="e.g. Wireless Keyboard" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category <span class="required">*</span></label>
+            <input type="text" id="f-category" class="form-input" placeholder="e.g. Electronics" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Supplier</label>
+            <input type="text" id="f-supplier" class="form-input" placeholder="Supplier name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cost Price <span class="required">*</span></label>
+            <input type="number" id="f-cost" class="form-input" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Selling Price <span class="required">*</span></label>
+            <input type="number" id="f-sell" class="form-input" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Stock Quantity <span class="required">*</span></label>
+            <input type="number" id="f-stock" class="form-input" placeholder="0" min="0" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Minimum Stock</label>
+            <input type="number" id="f-min-stock" class="form-input" placeholder="5" min="0" />
+          </div>
+          <div class="form-group form-group--full">
+            <label class="form-label">Description</label>
+            <textarea id="f-desc" class="form-input form-textarea" placeholder="Optional product description…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn--ghost" id="modal-cancel">Cancel</button>
+        <button class="btn btn--primary" id="modal-save">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ CONFIRM MODAL ════════ -->
+  <div class="modal-backdrop hidden" id="confirm-modal-backdrop">
+    <div class="modal modal--sm" id="confirm-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Confirm Delete</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure you want to delete this product? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn--ghost" id="confirm-cancel">Cancel</button>
+        <button class="btn btn--danger" id="confirm-ok">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ TOAST CONTAINER ════ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ════════════════════════════════ LOADING OVERLAY ════ -->
+  <div class="loading-overlay hidden" id="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
