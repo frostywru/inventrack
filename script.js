@@ -9,12 +9,13 @@
    See the setup guide at the bottom of this file.
 ────────────────────────────────────────────────────────────────*/
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey: "AIzaSyAXTDq6uNyf4XuhDjWGkf13uDC3qszrWg0",
+  authDomain: "mnlinventory-29f86.firebaseapp.com",
+  projectId: "mnlinventory-29f86",
+  storageBucket: "mnlinventory-29f86.firebasestorage.app",
+  messagingSenderId: "937435974366",
+  appId: "1:937435974366:web:aa520ddbb205e43bca904f",
+  measurementId: "G-7WWXT1KG77"
 };
 
 /* ──────────────────────────────────────────────────────────────
