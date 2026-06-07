@@ -445,12 +445,12 @@ async function saveProduct() {
   try {
     if (id) {
       await db.collection("products").doc(id).update(data);
-      await logActivity("update", `Updated product <bold>${name}</bold>`);
+      await logActivity("update", `Updated product <strong>${name}</strong>`);
       showToast(`"${name}" updated successfully.`, "success");
     } else {
       data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       await db.collection("products").add(data);
-      await logActivity("add", `Added new product <bold>${name}</bold>`);
+      await logActivity("add", `Added new product <strong>${name}</strong>`);
       showToast(`"${name}" added successfully.`, "success");
     }
     hideModal("product-modal-backdrop");
@@ -483,7 +483,7 @@ function openStockModal(id) {
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   })
   .then(() => {
-    logActivity("update", `Stock updated for <bold>${p.name}</bold>: ${p.stockQty} → ${qty}`);
+    logActivity("update", `Stock updated for <strong>${p.name}</strong>: ${p.stockQty} → ${qty}`);
     showToast(`Stock updated to ${qty} for "${p.name}".`, "success");
   })
   .catch(e => { console.error(e); showToast("Error updating stock.", "error"); })
@@ -508,7 +508,7 @@ async function executeDelete() {
   showLoading();
   try {
     await db.collection("products").doc(deleteTargetId).delete();
-    await logActivity("delete", `Deleted product <bold>${name}</bold>`);
+    await logActivity("delete", `Deleted product <strong>${name}</strong>`);
     showToast(`"${name}" deleted.`, "success");
   } catch (e) {
     console.error(e);
